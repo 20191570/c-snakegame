@@ -1,0 +1,84 @@
+#include <ncurses.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+using namespace std;
+
+WINDOW *create_newwin(int height, int width, int starty, int startx);
+
+int main(){
+  srand((unsigned int)time(NULL));
+  int map_arr[21][21] = {
+    {2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2},
+  };
+  WINDOW *my_win;
+  int height = 10;
+  int width = 10;
+  int starty = 5;
+  int startx = 50;
+  int gate1;
+  int gate2;
+  while(true){
+    gate1 = rand()%76;
+    gate2 = rand()%76;
+    if(gate1 != gate2) break;
+  }
+  int cnt = 1;
+
+  setlocale(LC_ALL, "");
+  initscr();
+  for(int i = 0;i<21;i++){
+    for(int j = 0;j<21;j++){
+
+      if(map_arr[i][j] == 2){
+        mvprintw(i,j,"\u2B1B");
+      }
+      else if(map_arr[i][j] == 1){
+        if(cnt == gate1) mvprintw(i,j,"\u2B55");
+        else if(cnt == gate2) mvprintw(i,j,"\u2B55");
+        else mvprintw(i,j,"\u2B1C");
+        cnt++;
+      }
+      else if(map_arr[i][j] == 0){
+        mvprintw(i,j,"\u3000");
+      }
+    }
+  }
+  refresh();
+  my_win = create_newwin(height, width, starty, startx);
+  getch();
+  endwin();
+  return 0;
+}
+
+WINDOW *create_newwin(int height, int width, int starty, int startx)
+{       WINDOW *local_win;
+
+        local_win = newwin(height, width, starty, startx);
+        box(local_win, 0 , 0);          /* 0, 0 gives default characters
+                                         * for the vertical and horizontal
+                                         * lines                        */
+        wrefresh(local_win);            /* Show that box                */
+
+        return local_win;
+}
