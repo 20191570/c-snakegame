@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <iostream>
+#include <unistd.h>
 using namespace std;
 
 int main(){
@@ -70,6 +71,7 @@ int main(){
       map_arr[y][x] = 3;
     }
     refresh();
+    usleep(500);
   }
   getch();
   endwin();
