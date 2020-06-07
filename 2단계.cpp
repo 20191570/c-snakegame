@@ -72,7 +72,6 @@ int main(){
   curs_set(0);
   noecho();
   screen_set();
-  int key;
   while(true){
     set_snake();
     screen_set();
