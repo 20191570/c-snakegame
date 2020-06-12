@@ -2,11 +2,18 @@
 #include <unistd.h>
 #include <iostream>
 
-int x = 1;
-int y = 1;
+int headDirectionWeight[5][2] = {
+  {0, 0},
+  {0,-1},
+  {0, 1},
+  {-1, 0},
+  {1, 0}
+};
+int currentHeadDirection = 0;
+int current_x = 10;
+int current_y = 10;
 int map_arr[21][21] = {
   {2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2},
-  {1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -16,6 +23,7 @@ int map_arr[21][21] = {
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -43,28 +51,28 @@ void screen_set(){
     }
   }
 }
-void set_snake(int key){
+int set_snake(){
   if(getch() == KEY_UP){
-    map_arr[y][x] = 0;
-    y--;
-    map_arr[y][x] = 3;
+    return 1;
   }
   else if(getch() == KEY_DOWN){
-    map_arr[y][x] = 0;
-    y++;
-    map_arr[y][x] = 3;
+    return 2;
   }
   else if(getch() == KEY_LEFT){
-    map_arr[y][x] = 0;
-    x--;
-    map_arr[y][x] = 3;
+    return 3;
   }
   else if(getch() == KEY_RIGHT){
-    map_arr[y][x] = 0;
-    x++;
-    map_arr[y][x] = 3;
+    return 4;
   }
-
+}
+void moveSnakeHead(int &current_x, int &current_y, int headDirection){
+  int preX = current_x + headDirectionWeight[headDirection][0];
+  int preY = current_y + headDirectionWeight[headDirection][1];
+  map_arr[current_x][current_y] = 0;
+  current_x = preX;
+  current_y = preY;
+  map_arr[current_x][current_y] = 3;
+}
 int main(){
   setlocale(LC_ALL, "");
   initscr();
@@ -72,8 +80,10 @@ int main(){
   curs_set(0);
   noecho();
   screen_set();
+  int key;
   while(true){
-    set_snake();
+    currentHeadDirection = set_snake();
+    moveSnakeHead(current_x, current_y, currentHeadDirection);
     screen_set();
     refresh();
     usleep(500);
